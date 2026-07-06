@@ -1,9 +1,16 @@
 const Country = require('../models/Country');
+const sendCountryNotification = require('../utils/sendEmail');
+const logCountryAction = require('../utils/googleSheets');
 
 // CREATE
 exports.createCountry = async (req, res) => {
   try {
     const country = await Country.create(req.body);
+
+    // fire-and-forget, don't block the response
+    sendCountryNotification('created', country);
+    logCountryAction('created', country);
+
     res.status(201).json(country);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -60,6 +67,10 @@ exports.updateCountry = async (req, res) => {
       runValidators: true
     });
     if (!country) return res.status(404).json({ message: 'Country not found' });
+
+    sendCountryNotification('updated', country);
+    logCountryAction('updated', country);
+
     res.json(country);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -71,6 +82,10 @@ exports.deleteCountry = async (req, res) => {
   try {
     const country = await Country.findByIdAndDelete(req.params.id);
     if (!country) return res.status(404).json({ message: 'Country not found' });
+
+    sendCountryNotification('deleted', country);
+    logCountryAction('deleted', country);
+
     res.json({ message: 'Country deleted' });
   } catch (err) {
     res.status(500).json({ message: err.message });

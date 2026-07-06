@@ -18,8 +18,10 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "express-validator": "^7.3.2",
+    "googleapis": "^173.0.0",
     "jsonwebtoken": "^9.0.3",
-    "mongoose": "^9.7.3"
+    "mongoose": "^9.7.3",
+    "resend": "^6.17.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
